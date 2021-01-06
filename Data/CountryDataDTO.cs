@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace CovidTrackerAPI.Data
 {
-    public class SpecificCountryDataDTO
+    public record CountryDataDTO
     {
         public string Country { get; init; }
         public int Cases { get; init; }

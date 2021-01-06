@@ -8,6 +8,8 @@ using CovidTrackerAPI.Helpers;
 using CovidTrackerAPI.Interfaces;
 using CovidTrackerAPI.Models;
 using Microsoft.Extensions.Logging;
+using AutoMapper;
+using CovidTrackerAPI.Data;
 
 namespace CovidTrackerAPI.Controllers
 {
@@ -17,22 +19,27 @@ namespace CovidTrackerAPI.Controllers
     {
         private readonly ITrackingRepository _repo;
         private readonly ILogger<TrackingController> _logger;
-        public TrackingController(ITrackingRepository repo, ILogger<TrackingController> logger)
+        private readonly IMapper _mapper;
+
+        public TrackingController(ITrackingRepository repo, ILogger<TrackingController> logger, IMapper mapper)
         {
             _repo = repo;
             _logger = logger;
+            _mapper = mapper;
         }
 
         
         [HttpGet("global")]
         public async Task<IActionResult> GetGlobalCases()
         {
-            var states = await _repo.GetGlobalCasesAsync();
+            var globalCases = await _repo.GetGlobalCasesAsync();
 
-            if (states == null)
+            if (globalCases == null)
                 return BadRequest("No data found!");
-            
-            return Ok(states);
+
+            var globalCasesToReturn = _mapper.Map<GlobalCasesDTO>(globalCases);
+
+            return Ok(globalCasesToReturn);
         }
 
 
@@ -43,8 +50,10 @@ namespace CovidTrackerAPI.Controllers
 
             if (countryList == null)
                 return BadRequest("No data found!");
-           
-            return Ok(countryList);
+
+            var countryListToReturn = _mapper.Map<List<CountryDataDTO>>(countryList);
+
+            return Ok(countryListToReturn);
         }
 
         [HttpGet("countries/{countryName}")]
@@ -55,7 +64,9 @@ namespace CovidTrackerAPI.Controllers
             if (country == null)
                 return BadRequest("No data was found for this country!");
 
-            return Ok(country);
+            var countryToReturn = _mapper.Map<SpecificCountryDataDTO>(country);
+
+            return Ok(countryToReturn);
         }
     }
 }

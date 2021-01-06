@@ -13,7 +13,7 @@ namespace CovidTrackerAPI.Helpers
         public AutoMapperProfiles()
         {
             CreateMap<GlobalCases, GlobalCasesDTO>();
-            CreateMap<CountryData, CountryDataListDTO>();
+            CreateMap<CountryData, CountryDataDTO>();
             CreateMap<SpecificCountryData, SpecificCountryDataDTO>();
         }
     }
